@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flower and Glowing Text</title>
+  <!-- Mobile/iPad scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    /* Reset / Basic setup */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body in a vertical layout so items stack (flower above text) */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;        /* center horizontally */
+      justify-content: flex-start;/* start at top */
+      min-height: 100vh;          /* so it can fill screen if needed */
+      background: #122139;        /* or #080f1a if you prefer */
+      font-family: 'Dancing Script', cursive;
+    }
+
+    /* Container for the rose */
+    .container {
+      position: relative;  /* relative, so glass/shine can use absolute internally */
+      margin-top: 40px;    /* push it down from the top of the page a bit */
+      width: 200px;        /* fixed width matching .glass below */
+      height: 350px;       /* fixed height matching .glass below */
+    }
+
+    .glass {
+      height: 100%;        /* fill the container’s height */
+      width: 100%;         /* fill the container’s width */
+      background: #122139;
+      border-radius: 300px 300px 0 0;
+      position: relative;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.1);
+    }
+    .glass:before {
+      content: "";
+      height: 10px;
+      width: 10px;
+      transform-origin: center;
+      border: 10px solid #122139;
+      border-radius: 100%;
+      position: absolute;
+      left: 87px;
+      top: -25px;
+    }
+    .glass:after {
+      content: "";
+      position: absolute;
+      height: 15px;
+      width: 250px;
+      background: #a52a2a;
+      top: 100%;
+      left: -13%;
+    }
+
+    .shine {
+      width: 12px;
+      height: 140px;
+      background: white;
+      opacity: 0.2;
+      position: absolute;
+      left: 85%;
+      top: 80px;
+      border-radius: 100px;
+      z-index: 10;
+    }
+    .shine:before {
+      content: "";
+      width: 12px;
+      height: 20px;
+      position: absolute;
+      background: white;
+      top: 160px;
+      border-radius: 100px;
+    }
+
+    /* Thorns */
+    .thorns > div {
+      position: absolute;
+      width: 0;
+      height: 0;
+      top: 140px;
+    }
+    .thorns > div:nth-child(odd) {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 5px solid #054c05;
+      left: 105px;
+    }
+    .thorns > div:nth-child(even) {
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 5px solid #054c05;
+      left: 95px;
+    }
+    .thorns > div:nth-child(1) {
+      top: 200px;
+    }
+    .thorns > div:nth-child(2) {
+      top: 170px;
+    }
+    .thorns > div:nth-child(4) {
+      top: 230px;
+    }
+
+    /* Leaves & Stem */
+    .leaves > div:nth-last-child(1) {
+      position: absolute;
+      width: 55px;
+      height: 30px;
+      background: #338f37;
+      top: 120px;
+      left: 75px;
+      border-radius: 100px;
+    }
+    .leaves > div:nth-child(1) {
+      position: absolute;
+      width: 6px;
+      height: 210px;
+      background: #054c05;
+      top: 95px;
+      left: 100px;
+      border-radius: 0 0 100px 100px;
+    }
+    .leaves > div:nth-child(2) {
+      position: absolute;
+      width: 30px;
+      height: 50px;
+      border-radius: 5px 40px 20px 40px;
+      background: #054c05;
+      transform-origin: bottom;
+      transform: rotate(-30deg);
+      top: 180px;
+      left: 80px;
+      box-shadow: inset 5px 5px #066406;
+    }
+    .leaves > div:nth-child(3) {
+      position: absolute;
+      width: 30px;
+      height: 50px;
+      border-radius: 40px 5px 40px 20px;
+      background: #054c05;
+      transform-origin: bottom;
+      transform: rotate(30deg);
+      top: 150px;
+      left: 95px;
+      box-shadow: inset -5px 5px #066406;
+    }
+
+    /* Petals */
+    .petals > div {
+      position: absolute;
+      background: #d52d58;
+      width: 45px;
+      height: 80px;
+      top: 55px;
+      transition: all 0.5s ease-out;
+    }
+    .petals > div:nth-child(1) {
+      border-radius: 15px;
+      box-shadow: 0px 0px 30px #f594b8;
+      left: 80px;
+      top: 60px;
+    }
+    .petals > div:nth-child(2),
+    .petals > div:nth-child(4),
+    .petals > div:nth-child(6) {
+      background: #b81b43;
+      left: 60px;
+      border-radius: 0px 30px 0px 30px;
+      transform-origin: bottom right;
+    }
+    .petals > div:nth-child(3),
+    .petals > div:nth-child(5),
+    .petals > div:nth-child(7) {
+      background: #b81b43;
+      left: 100px;
+      border-radius: 30px 0px 30px 0px;
+      transform-origin: bottom left;
+    }
+
+    /* Petal animations */
+    .petals > div:nth-child(2) {
+      z-index: 5;
+      background: #ab1a3f;
+      top: 75px;
+      height: 70px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.5);
+      animation: bloom2 3s ease-in-out forwards;
+    }
+    .petals > div:nth-child(3) {
+      z-index: 4;
+      background: #ab1a3f;
+      top: 75px;
+      height: 70px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.5);
+      animation: bloom3 3s ease-in-out forwards, glowing 2.5s ease-in-out infinite;
+    }
+    .petals > div:nth-child(4) {
+      z-index: 3;
+      background: #b81b43;
+      top: 70px;
+      height: 75px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.5);
+      animation: bloom4 3s ease-in-out forwards, glowing 2.5s ease-in-out infinite;
+    }
+    .petals > div:nth-child(5) {
+      z-index: 2;
+      background: #b81b43;
+      top: 70px;
+      height: 75px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.5);
+      animation: bloom5 3s ease-in-out forwards, glowing 2.5s ease-in-out infinite;
+    }
+    .petals > div:nth-child(6) {
+      z-index: 1;
+      background: #c9204b;
+      top: 65px;
+      height: 70px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.3);
+      animation: bloom6 3s ease-in-out forwards, glowing 2.5s ease-in-out infinite;
+    }
+    .petals > div:nth-child(7) {
+      z-index: 0;
+      background: #c9204b;
+      top: 65px;
+      height: 70px;
+      box-shadow: 0px 0px 50px rgba(245, 148, 184, 0.3);
+      animation: bloom7 3s ease-in-out forwards, glowing 2.5s ease-in-out infinite;
+    }
+
+    /* Falling petals */
+    .deadPetals > div {
+      position: absolute;
+      background: #d52d58;
+      width: 20px;
+      height: 15px;
+      top: 120px;
+      border-radius: 0px 30px 0px 30px;
+      box-shadow: 0px 0px 30px rgba(245, 148, 184, 0.5);
+      transition: all 0.5s ease-out;
+    }
+    .deadPetals > div:nth-child(1) {
+      left: 86px;
+      transform: rotate(-30deg);
+      animation: falling 20s 4s ease-in-out infinite;
+    }
+    .deadPetals > div:nth-child(2) {
+      left: 83px;
+      transform: rotate(-30deg);
+      animation: falling 20s 8s ease-in-out infinite;
+    }
+    .deadPetals > div:nth-child(3) {
+      left: 82px;
+      transform: rotate(-30deg);
+      animation: falling 20s 12s ease-in-out infinite;
+    }
+    .deadPetals > div:nth-child(4) {
+      left: 67px;
+      transform: rotate(-30deg);
+      animation: falling 20s 16s ease-in-out infinite;
+    }
+
+    /* Glowing animation for petals */
+    @keyframes glowing {
+      50% {
+        background: #d7365f;
+        box-shadow: 0px 0px 60px #f594b8;
+      }
+    }
+
+    /* Bloom animations for various petals */
+    @keyframes bloom2 {
+      50% {
+        transform: rotate(-90deg);
+        top: 200px;
+        left: 100px;
+      }
+      100% {
+        transform: rotate(-60deg);
+        top: 252px;
+        left: 50px;
+        background: #71122a;
+        box-shadow: 0px 0px 0px rgba(245, 148, 184, 0);
+      }
+    }
+    @keyframes bloom3 {
+      100% { transform: rotate(45deg); }
+    }
+    @keyframes bloom4 {
+      100% { transform: rotate(-20deg); }
+    }
+    @keyframes bloom5 {
+      100% { transform: rotate(20deg); }
+    }
+    @keyframes bloom6 {
+      100% { transform: rotate(-5deg); }
+    }
+    @keyframes bloom7 {
+      100% { transform: rotate(5deg); }
+    }
+
+    /* Falling petals */
+    @keyframes falling {
+      20% {
+        top: 335px;
+        background: #9d193b;
+        box-shadow: 0px 0px 0px rgba(245, 148, 184, 0);
+      }
+      100% {
+        top: 335px;
+        opacity: 0;
+      }
+    }
+
+    /* The text (in normal flow, so it’s below the rose) */
+    .princess-text {
+      margin: 30px auto 60px; /* spacing: top=30px, bottom=60px, auto left/right */
+      width: 90%;            /* so it fits on small screens, tweak as you like */
+      max-width: 600px;      /* limit wide text on large screens */
+      text-align: center;
+      color: #ff99cc;
+      font-size: 2.5rem;     /* adjust as desired */
+      text-shadow: 0px 0px 15px rgba(255, 153, 204, 0.8),
+                   0px 0px 25px rgba(255, 102, 204, 0.6);
+      animation: shimmer 3s infinite;
+      line-height: 1.4;      /* a bit of extra line spacing for Arabic */
+    }
+
+    @keyframes shimmer {
+      0% {
+        text-shadow: 0px 0px 10px rgba(255, 153, 204, 0.8),
+                     0px 0px 20px rgba(255, 102, 204, 0.6);
+      }
+      50% {
+        text-shadow: 0px 0px 20px rgba(255, 153, 204, 1),
+                     0px 0px 30px rgba(255, 102, 204, 0.9);
+      }
+      100% {
+        text-shadow: 0px 0px 10px rgba(255, 153, 204, 0.8),
+                     0px 0px 20px rgba(255, 102, 204, 0.6);
+      }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .container {
+        width: 150px;
+        height: 300px;
+      }
+      .princess-text {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 120px;
+        height: 250px;
+      }
+      .princess-text {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Rose Container -->
+  <div class="container">
+    <div class="glass">
+      <div class="shine"></div>
+    </div>
+    <div class="thorns">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="leaves">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="petals">
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+    </div>
+    <div class="deadPetals">
+      <div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+
+  <!-- Poem/Text BELOW the rose -->
+<div class="princess-text">
+    رورو<br>
+    يا وردةً خبّأها الوقتُ في صدري<br>
+    لا ذبولَ يمرُّ على عينيكِ،<br>
+    ولا عطرَ يطفئُ أغنيتي<br>
+    تحتَ قبةٍ من حلمٍ وأمنيةٍ<br>
+    يقفُ قلبي مثلَ غصنٍ مُبتلّ<br>
+    يضيءُ باسمِكِ وينحني لجمالكِ.
+</div>
+</html>
